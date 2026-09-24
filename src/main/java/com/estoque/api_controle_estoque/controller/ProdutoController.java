@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/produtos")
@@ -13,31 +14,35 @@ public class ProdutoController {
 
     private final ProdutoService produtoService;
 
-    // Injeção de dependência via construtor
     public ProdutoController(ProdutoService produtoService) {
         this.produtoService = produtoService;
     }
 
     @GetMapping
-    public List<Produto> listarTodos() {
-        return produtoService.listarTodos();
+    public ResponseEntity<List<Produto>> listarTodos() {
+        List<Produto> produtos = produtoService.listarTodos();
+        return ResponseEntity.ok(produtos);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Produto> buscarPorId(@PathVariable Long id) {
-        return produtoService.buscarPorId(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Optional<Produto> produtoOpt = produtoService.buscarPorId(id);
+        if (produtoOpt.isPresent()) {
+            return ResponseEntity.ok(produtoOpt.get());
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping
-    public Produto salvar(@RequestBody Produto produto) {
-        return produtoService.salvar(produto);
+    public ResponseEntity<Produto> salvar(@RequestBody Produto produto) {
+        Produto novoProduto = produtoService.salvar(produto);
+        return ResponseEntity.ok(novoProduto);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(@PathVariable Long id) {
-        if (produtoService.buscarPorId(id).isPresent()) {
+        Optional<Produto> produtoOpt = produtoService.buscarPorId(id);
+        if (produtoOpt.isPresent()) {
             produtoService.deletar(id);
             return ResponseEntity.noContent().build();
         }
