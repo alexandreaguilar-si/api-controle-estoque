@@ -31,7 +31,7 @@ src/main/java/com/estoque/api_controle_estoque/
 └── model/          # Entidades de Domínio (Mapeamento ORM)
 
 ### Organização das Camadas
-- controller: Responsável por receber as requisições HTTP (GET, POST, DELETE), mapear as rotas e retornar as respostas formatadas em JSON.
+- controller: Responsável por receber as requisições HTTP (GET, POST, PUT, DELETE), mapear as rotas e retornar as respostas formatadas em JSON.
 - service: Concentra toda a lógica de negócio, regras de validação e fluxo transacional da aplicação.
 - repository: Interface que estende o JpaRepository, automatizando a comunicação com o banco de dados sem necessidade de escrever SQL manual.
 - model: Define a entidade de domínio Produto, mapeada diretamente para a tabela do banco de dados relacional.
@@ -73,6 +73,7 @@ A API estará a rodar localmente e pronta para receber requisições em http://l
 - GET /produtos : Retorna a lista completa de todos os produtos cadastrados no estoque
 - GET /produtos/{id} : Busca um produto específico filtrando pelo seu ID único
 - POST /produtos : Cadastra um novo item no inventário
+- PUT /produtos/{id} : Atualiza os dados de um produto existente pelo ID
 - DELETE /produtos/{id} : Remove um produto do sistema através do ID
 
 ---
