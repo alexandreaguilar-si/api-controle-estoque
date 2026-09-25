@@ -48,6 +48,29 @@ public class ProdutoController {
         return ResponseEntity.ok(novoProduto);
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<Produto> atualizar(
+            @PathVariable @NonNull Long id,
+            @RequestBody @NonNull Produto produtoAtualizado) {
+
+        Optional<Produto> produtoOpt = produtoService.buscarPorId(id);
+
+        if (produtoOpt.isPresent()) {
+            Produto produtoExistente = produtoOpt.get();
+            
+            // Atualiza os campos do produto existente com os dados recebidos
+            produtoExistente.setNome(produtoAtualizado.getNome());
+            produtoExistente.setDescricao(produtoAtualizado.getDescricao());
+            produtoExistente.setPreco(produtoAtualizado.getPreco());
+            produtoExistente.setQuantidade(produtoAtualizado.getQuantidade());
+
+            Produto produtoAtualizadoSalvo = produtoService.salvar(produtoExistente);
+            return ResponseEntity.ok(produtoAtualizadoSalvo);
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletar(
             @PathVariable @NonNull Long id) {
